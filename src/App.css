@@ -1,0 +1,626 @@
+/* ========================================
+   1. カラー・サイズなどの共通設定
+======================================== */
+
+:root {
+  font-family:
+    "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+
+  color: #24364b;
+  background-color: #eaf3ff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+
+  /* カラーパレット */
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #eff6ff;
+
+  --color-text: #24364b;
+  --color-text-muted: #64748b;
+
+  --color-white: #ffffff;
+  --color-border: #dbe5f1;
+
+  --color-correct: #15803d;
+  --color-correct-bg: #f0fdf4;
+
+  --color-incorrect: #b91c1c;
+  --color-incorrect-bg: #fef2f2;
+
+  /* レイアウト・装飾 */
+  --radius-small: 10px;
+  --radius-medium: 14px;
+  --radius-large: 22px;
+
+  --shadow-card: 0 12px 35px rgba(39, 79, 130, 0.1);
+
+  --transition-speed: 0.2s;
+}
+
+/* ========================================
+   2. 全体のリセット・ページ背景
+======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background: linear-gradient(145deg, #f5faff 0%, #e7f1ff 55%, #dceaff 100%);
+}
+
+button {
+  font: inherit;
+}
+
+/* ========================================
+   3. クイズアプリ全体
+======================================== */
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px 20px;
+}
+
+.quiz-app {
+  width: 100%;
+  max-width: 680px;
+
+  padding: 36px;
+
+  background-color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-card);
+}
+
+/* ========================================
+   4. 問題番号・正解数・進捗バー
+======================================== */
+
+.quiz-status {
+  margin-bottom: 32px;
+}
+
+.quiz-status-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.quiz-progress-text,
+.quiz-score {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.quiz-progress-text {
+  color: var(--color-text-muted);
+}
+
+.quiz-score {
+  color: var(--color-primary);
+}
+
+/* HTML標準のprogress要素 */
+.quiz-progress-bar {
+  display: block;
+
+  width: 100%;
+  height: 10px;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  overflow: hidden;
+  border: none;
+  border-radius: 999px;
+
+  background-color: #e5edf8;
+}
+
+/* Chrome・Edge・Safari */
+.quiz-progress-bar::-webkit-progress-bar {
+  background-color: #e5edf8;
+  border-radius: 999px;
+}
+
+.quiz-progress-bar::-webkit-progress-value {
+  background: linear-gradient(90deg, #60a5fa, var(--color-primary));
+
+  border-radius: 999px;
+}
+
+/* Firefox */
+.quiz-progress-bar::-moz-progress-bar {
+  background: linear-gradient(90deg, #60a5fa, var(--color-primary));
+
+  border-radius: 999px;
+}
+
+/* ========================================
+   5. 問題文
+======================================== */
+
+.quiz-question {
+  margin-bottom: 28px;
+}
+
+#question-text {
+  margin: 0 0 26px;
+
+  color: var(--color-text);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* ========================================
+   6. 選択肢の一覧
+======================================== */
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.quiz-option {
+  margin: 0;
+  padding: 0;
+}
+
+/* ========================================
+   7. 選択肢ボタン
+======================================== */
+
+.option-button {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 16px;
+
+  width: 100%;
+  min-height: 68px;
+  padding: 12px 18px;
+
+  color: var(--color-text);
+  text-align: left;
+
+  background-color: var(--color-white);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-medium);
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-speed),
+    border-color var(--transition-speed),
+    box-shadow var(--transition-speed),
+    transform var(--transition-speed);
+}
+
+/* マウスを重ねたとき */
+@media (hover: hover) {
+  .option-button:not(:disabled):hover {
+    background-color: var(--color-primary-light);
+    border-color: #93c5fd;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.08);
+  }
+}
+
+/* ボタンを押している間 */
+.option-button:not(:disabled):active {
+  transform: translateY(0);
+  background-color: #dbeafe;
+}
+
+/* キーボードでフォーカスしたとき */
+.option-button:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* 回答後など、操作できない状態 */
+.option-button:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+/* A・B・C・Dのラベル */
+.option-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  color: var(--color-primary);
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  background-color: var(--color-primary-light);
+  border-radius: var(--radius-small);
+}
+
+/* 選択肢の文章 */
+.option-text {
+  min-width: 0;
+
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+/* 正誤記号 */
+.option-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* 正解の選択肢：将来Reactからクラスを付ける */
+.option-button.is-correct {
+  background-color: var(--color-correct-bg);
+  border-color: var(--color-correct);
+  opacity: 1;
+}
+
+.option-button.is-correct .option-result {
+  color: var(--color-correct);
+}
+
+/* 不正解の選択肢 */
+.option-button.is-incorrect {
+  background-color: var(--color-incorrect-bg);
+  border-color: var(--color-incorrect);
+  opacity: 1;
+}
+
+.option-button.is-incorrect .option-result {
+  color: var(--color-incorrect);
+}
+
+/* ========================================
+   8. 回答後のフィードバック
+======================================== */
+
+.quiz-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 18px;
+  padding-top: 24px;
+
+  border-top: 1px solid var(--color-border);
+}
+
+.feedback-message {
+  margin: 0;
+
+  color: var(--color-text);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.6;
+  min-height: 1.6em;
+}
+
+.feedback-explanation {
+  text-align: left;
+  min-height: 5.4em;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+/* 正解・不正解メッセージの色分け */
+.feedback-message.is-correct {
+  color: var(--color-correct);
+}
+
+.feedback-message.is-incorrect {
+  color: var(--color-incorrect);
+}
+
+/* ========================================
+   9. 次の問題へ進むボタン
+======================================== */
+
+.next-question-button {
+  width: 100%;
+  max-width: 280px;
+  min-height: 48px;
+
+  padding: 12px 24px;
+
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: 700;
+
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-small);
+
+  cursor: pointer;
+
+  transition:
+    background-color var(--transition-speed),
+    box-shadow var(--transition-speed),
+    transform var(--transition-speed);
+}
+
+@media (hover: hover) {
+  .next-question-button:not(:disabled):hover {
+    background-color: var(--color-primary-dark);
+
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+
+    transform: translateY(-2px);
+  }
+}
+
+.next-question-button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.next-question-button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.next-question-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   10. スマートフォン対応
+======================================== */
+
+@media (max-width: 600px) {
+  #root {
+    align-items: flex-start;
+    padding: 20px 12px;
+  }
+
+  .quiz-app {
+    padding: 24px 18px;
+    border-radius: 16px;
+  }
+
+  .quiz-status {
+    margin-bottom: 26px;
+  }
+
+  #question-text {
+    font-size: 1.15rem;
+    margin-bottom: 22px;
+  }
+
+  .option-button {
+    grid-template-columns: 36px minmax(0, 1fr) 24px;
+    gap: 12px;
+
+    min-height: 60px;
+    padding: 10px 12px;
+  }
+
+  .option-label {
+    width: 36px;
+    height: 36px;
+  }
+
+  .option-text {
+    font-size: 0.95rem;
+  }
+
+  .quiz-feedback {
+    padding-top: 20px;
+  }
+
+  .next-question-button {
+    max-width: none;
+  }
+}
+
+/* ========================================
+   11. 動きを抑える設定への対応
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .option-button,
+  .next-question-button {
+    transition: none;
+  }
+}
+
+/* ========================================
+   12. クイズ終了・回答履歴
+======================================== */
+
+.quiz-result {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.quiz-result-title {
+  margin: 0;
+
+  color: var(--color-text);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.quiz-result-score {
+  margin: 0 0 12px;
+
+  color: var(--color-primary);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.quiz-result-heading {
+  margin: 0;
+
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* 回答履歴の一覧 */
+.quiz-result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+/* 問題ごとのカード */
+.quiz-result-item {
+  padding: 20px;
+
+  background-color: #f8fbff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+}
+
+/* 問題番号と正誤判定 */
+.quiz-result-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.quiz-result-number {
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.quiz-result-judgment {
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.quiz-result-judgment.is-correct {
+  color: var(--color-correct);
+}
+
+.quiz-result-judgment.is-incorrect {
+  color: var(--color-incorrect);
+}
+
+/* 問題文 */
+.quiz-result-question {
+  margin: 0 0 16px;
+
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+/* 回答の表示 */
+.quiz-result-answer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+
+  margin: 8px 0 0;
+
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.quiz-result-answer-label {
+  color: var(--color-text-muted);
+}
+
+.quiz-result-answer-value {
+  color: var(--color-text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* 再挑戦ボタン */
+.quiz-result > .next-question-button {
+  align-self: center;
+  margin-top: 8px;
+}
+
+/* スマートフォン対応 */
+@media (max-width: 600px) {
+  .quiz-result {
+    gap: 16px;
+  }
+
+  .quiz-result-title {
+    font-size: 1.3rem;
+  }
+
+  .quiz-result-score {
+    font-size: 1.2rem;
+  }
+
+  .quiz-result-item {
+    padding: 16px;
+  }
+
+  .quiz-result-question {
+    font-size: 0.95rem;
+  }
+
+  .quiz-result-answer {
+    font-size: 0.9rem;
+  }
+}
